@@ -3,6 +3,7 @@
 namespace Fraktvalg\Fraktvalg;
 
 use Fraktvalg\Fraktvalg\REST\Settings\ApiKey;
+use Fraktvalg\Fraktvalg\REST\Settings\LocalPickup;
 use Fraktvalg\Fraktvalg\REST\Settings\OptionalSettings;
 use Fraktvalg\Fraktvalg\REST\Settings\Providers;
 use Fraktvalg\Fraktvalg\REST\Settings\ProviderShippingOptions;
@@ -14,6 +15,7 @@ class Settings {
 		new Providers();
 		new ProviderShippingOptions();
 		new OptionalSettings();
+		new LocalPickup();
 
 		\add_action( 'admin_notices', [ $this, 'remove_admin_notices_on_onboarding' ], 1 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );

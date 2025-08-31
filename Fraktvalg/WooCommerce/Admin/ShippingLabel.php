@@ -57,6 +57,10 @@ class ShippingLabel {
 			'_fraktvalg_shipper',
 			'_fraktvalg_shipment_id',
 			'_fraktvalg_shipment_meta',
+			'_fraktvalg_local_pickup',
+			'_fraktvalg_pickup_location_id',
+			'_fraktvalg_pickup_location_name',
+			'_fraktvalg_pickup_location_address',
 		];
 
 		$data_attrs = [];
@@ -73,6 +77,9 @@ class ShippingLabel {
 			'data-environment="%s"',
 			\esc_attr( Options::get( 'useProduction' ) )
 		);
+
+		// No need to send additional data for local pickup orders
+		// The detection is done via _fraktvalg_local_pickup meta
 
 		printf(
 			'<div id="fraktvalg-label-meta-box" data-order_id="%s" %s></div>',

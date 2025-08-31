@@ -1082,3 +1082,118 @@ msgstr "Standard"
 
 #~ msgid "10"
 #~ msgstr "10"
+
+# Local Store Pickup Translations
+#: src/Settings/Tabs/OptionalSettings.jsx:211
+#: src/Shipping/Booking/index.jsx:71
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:465
+msgid "Local Store Pickup"
+msgstr "Henting i butikk"
+
+#: src/Settings/index.jsx:47
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:465
+msgid "Local store pickup"
+msgstr "Henting i butikk"
+
+#: src/Shipping/Booking/index.jsx:74
+msgid "This is a local pickup order. Do not ship this order."
+msgstr "Dette er en hentingsordre. Ikke send denne ordren."
+
+#: src/Shipping/Booking/index.jsx:80
+msgid "Pickup Location:"
+msgstr "Hentested:"
+
+#: src/Shipping/Booking/index.jsx:97
+msgid "The customer will pick up the order at your store location."
+msgstr "Kunden vil hente ordren på butikklokasjonen din."
+
+#: src/Settings/Tabs/OptionalSettings.jsx:213
+msgid "Allow customers to pick up their orders directly from your store locations."
+msgstr "La kundene hente ordrene sine direkte fra butikklokasjonen din."
+
+#: src/Settings/Tabs/OptionalSettings.jsx:218
+msgid "Enable store pickup"
+msgstr "Aktiver henting i butikk"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:228
+msgid "Free pickup threshold"
+msgstr "Grense for gratis henting"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:244
+msgid "Leave empty to always use location prices"
+msgstr "La stå tom for alltid å bruke stedspriser"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:250
+msgid "Pickup Locations"
+msgstr "Hentesteder"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:259
+msgid "Location"
+msgstr "Sted"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:275
+msgid "Remove"
+msgstr "Fjern"
+
+# Enabled - using "Aktivert" translation
+
+#: src/Settings/Tabs/OptionalSettings.jsx:287
+msgid "Location name"
+msgstr "Stedsnavn"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:291
+msgid "Downtown Store"
+msgstr "Sentrumsbutikk"
+
+# Address - using existing translation
+
+#: src/Settings/Tabs/OptionalSettings.jsx:299
+msgid "123 Main St, Oslo"
+msgstr "Hovedgaten 123, Oslo"
+
+# Price translation already exists at line 661
+
+#: src/Settings/Tabs/OptionalSettings.jsx:322
+msgid "Pickup time text"
+msgstr "Hentetidstekst"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:326
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:441
+msgid "Usually ready within 1 hour"
+msgstr "Vanligvis klar innen 1 time"
+
+#: src/Settings/Tabs/OptionalSettings.jsx:354
+msgid "Add Location"
+msgstr "Legg til sted"
+
+#: Fraktvalg/WooCommerce/Admin/ShipmentStatusColumn.php:48
+msgid "Store Pickup"
+msgstr "Henting i butikk"
+
+#: Fraktvalg/REST/WooCommerce/CreateConsignment.php:86
+msgid "This order is marked for local store pickup. The item should be picked up at the store and should not be shipped."
+msgstr "Denne ordren er merket for henting i butikk. Varen skal hentes i butikken og skal ikke sendes."
+
+#: Fraktvalg/REST/WooCommerce/CreateConsignment.php:90
+msgid "Order is marked for store pickup. No shipping label is required."
+msgstr "Ordren er merket for henting i butikk. Ingen fraktetikett er nødvendig."
+
+#: Fraktvalg/REST/Settings/LocalPickup.php:23
+msgid "Enable or disable local pickup"
+msgstr "Aktiver eller deaktiver henting i butikk"
+
+#: Fraktvalg/REST/Settings/LocalPickup.php:41
+msgid "Array of pickup locations"
+msgstr "Liste over hentesteder"
+
+#: Fraktvalg/REST/Settings/LocalPickup.php:58
+msgid "Minimum order amount for free pickup"
+msgstr "Minimumsbeløp for gratis henting"
+
+#: Fraktvalg/REST/Settings/LocalPickup.php:79
+msgid "Failed to update local pickup settings"
+msgstr "Kunne ikke oppdatere innstillinger for henting i butikk"
+
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:439
+msgid "Store Location"
+msgstr "Butikklokasjon"

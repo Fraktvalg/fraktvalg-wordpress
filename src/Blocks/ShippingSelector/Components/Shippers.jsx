@@ -21,10 +21,15 @@ export default function Shippers({ shippers, onSelectShipper, editorMode }) {
 					disabled={editorMode === 'multiple'}
 				>
 					<div className="flex items-center gap-4">
-						<ProviderLogo logo={ shipper?.texts?.logo?.url } alt="" className="w-12 h-12" />
+						<ProviderLogo logo={ shipper?.texts?.logo?.url } shipper={ shipper?.id } alt="" className="w-12 h-12" />
 
 						<div className="flex flex-col gap-1">
-							<span className="text-md font-semibold">{ sprintf( __( 'Shipped by %s', 'fraktvalg' ), shipper?.details?.label ) }</span>
+							<span className="text-md font-semibold">
+								{ shipper?.id === 'local_pickup' 
+									? shipper?.details?.label 
+									: sprintf( __( 'Shipped by %s', 'fraktvalg' ), shipper?.details?.label ) 
+								}
+							</span>
 							<p className="text-sm text-gray-600 flex items-center">
 								<ClockIcon className="w-4 h-4 inline-block mr-2" />
 								{shipper?.details?.quickestShippingTime}

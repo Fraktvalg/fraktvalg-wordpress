@@ -31,6 +31,20 @@ class Options {
 				'height' => null,
 				'weight' => null,
 			],
+			'local_pickup' => [
+				'enabled' => false,
+				'locations' => [
+					[
+						'id' => 'location_0',
+						'name' => 'Main Store',
+						'address' => '',
+						'price' => 0,
+						'pickup_time_text' => 'Usually ready within 1 hour',
+						'enabled' => true,
+					],
+				],
+				'free_threshold' => null,
+			],
 		];
 
 		$options = \get_option( 'fraktvalg_options', [] );
@@ -80,9 +94,21 @@ class Options {
 	public static function bulk_set( array $options ) : bool {
 		$default_options = self::get();
 
-		$options = \array_merge( $default_options, $options );
+		$options = \array_replace_recursive( $default_options, $options );
 
-		return \update_option( 'fraktvalg_options', $options );
+		// update_option returns false if the value is the same, so we need to check differently
+		$result = \update_option( 'fraktvalg_options', $options );
+		
+		// If update_option returns false, check if the option exists and has the correct value
+		if ( false === $result ) {
+			$current = \get_option( 'fraktvalg_options' );
+			// If the current value matches what we tried to save, consider it a success
+			if ( $current === $options ) {
+				return true;
+			}
+		}
+		
+		return $result;
 	}
 
 	public static function get_cache_timestamp() {

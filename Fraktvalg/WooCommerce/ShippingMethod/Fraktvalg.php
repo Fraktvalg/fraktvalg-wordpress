@@ -415,6 +415,83 @@ class Fraktvalg extends \WC_Shipping_Method {
 			}
 		}
 
+		// Add local pickup options if enabled
+		$local_pickup_settings = $settings['local_pickup'] ?? [];
+		if ( ! empty( $local_pickup_settings['enabled'] ) && $local_pickup_settings['enabled'] ) {
+			$locations = isset( $local_pickup_settings['locations'] ) ? $local_pickup_settings['locations'] : [];
+			
+			// Generate a rate for each enabled location
+			foreach ( $locations as $index => $location ) {
+				// Skip disabled locations
+				if ( isset( $location['enabled'] ) && ! $location['enabled'] ) {
+					continue;
+				}
+				
+				// Get the configured price for this location
+				$location_price = isset( $location['price'] ) ? floatval( $location['price'] ) : 0;
+				
+				// Check for free shipping threshold
+				if ( ! empty( $local_pickup_settings['free_threshold'] ) && $package['contents_cost'] >= floatval( $local_pickup_settings['free_threshold'] ) ) {
+					$location_price = 0;
+				}
+				
+				// Get location details
+				$location_name = ! empty( $location['name'] ) ? sanitize_text_field( $location['name'] ) : __( 'Store Location', 'fraktvalg' );
+				$location_address = ! empty( $location['address'] ) ? sanitize_text_field( $location['address'] ) : '';
+				$pickup_time_text = ! empty( $location['pickup_time_text'] ) ? sanitize_text_field( $location['pickup_time_text'] ) : __( 'Usually ready within 1 hour', 'fraktvalg' );
+				$location_id = ! empty( $location['id'] ) ? sanitize_text_field( $location['id'] ) : 'location_' . $index;
+				
+				// Create display label with address if available
+				$display_label = $location_name;
+				if ( ! empty( $location_address ) ) {
+					// Use simple dash to avoid HTML entity encoding issues
+					$display_label = $location_name . ', ' . $location_address;
+				}
+				
+				// Add this location as a shipping option
+				$all_new_shipping_rates[] = [
+					'id' => 'local_pickup:' . $index,
+					'label' => $display_label,
+					'price' => $location_price,
+					'package' => $package,
+					'meta_data' => [
+						'fraktvalg' => true,
+						'shipper' => 'local_pickup',
+						'local_pickup' => true,
+						'location_id' => $location_id,
+						'location_name' => $location_name,
+						'location_address' => $location_address,
+						'option' => (object) [
+							'texts' => (object) [
+								'shipperName' => __( 'Local store pickup', 'fraktvalg' ),
+								'displayName' => $location_name,
+								'originalName' => $location_name,
+								'description' => $pickup_time_text,
+							],
+							'delivery' => (object) [
+								'estimatedDays' => $pickup_time_text,
+								'location' => (object) [
+									'name' => $location_name,
+									'address' => $location_address,
+								],
+							],
+							'price' => (object) [
+								'withVAT' => $location_price,
+								'hasFreeShipping' => ! empty( $local_pickup_settings['free_threshold'] ),
+								'freeShippingThreshold' => $local_pickup_settings['free_threshold'] ?? 0,
+							],
+						],
+					],
+				];
+				
+				// Track if this is the cheapest option
+				if ( null === $this->cheapest_shipping_price || $location_price < $this->cheapest_shipping_price ) {
+					$this->cheapest_shipping_price = $location_price;
+					$this->cheapest_shipping_id = 'local_pickup:' . $index;
+				}
+			}
+		}
+
 		usort( $all_new_shipping_rates, function( $a, $b ) {
 			return $a['price'] <=> $b['price'];
 		} );

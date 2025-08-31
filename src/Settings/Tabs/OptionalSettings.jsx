@@ -18,6 +18,22 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 	const setOption = (event) => {
 		const newSettings = {...settings};
 		
+		// Ensure local_pickup object exists
+		if (!newSettings.local_pickup) {
+			newSettings.local_pickup = {
+				enabled: false,
+				name: 'Local store pickup',
+				price: 0,
+				free_threshold: null,
+				locations: []
+			};
+		}
+		
+		// Ensure locations array exists
+		if (!newSettings.local_pickup.locations) {
+			newSettings.local_pickup.locations = [];
+		}
+		
 		switch (event.target.name) {
 			case 'freight[addedCost]':
 				newSettings.freight.addedCost = event.target.value;
@@ -49,8 +65,40 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 			case 'default_dimensions[weight]':
 				newSettings.default_dimensions.weight = event.target.value;
 				break;
+			case 'local_pickup[enabled]':
+				newSettings.local_pickup.enabled = event.target.checked;
+				break;
+			case 'local_pickup[name]':
+				newSettings.local_pickup.name = event.target.value;
+				break;
+			case 'local_pickup[price]':
+				newSettings.local_pickup.price = event.target.value;
+				break;
+			case 'local_pickup[free_threshold]':
+				newSettings.local_pickup.free_threshold = event.target.value || null;
+				break;
+			case 'local_pickup[locations]':
+				// Handle location array updates
+				newSettings.local_pickup.locations = event.target.value;
+				break;
 			default:
-				newSettings[event.target.name] = event.target.value;
+				// Check if this is a location-specific field
+				const locationMatch = event.target.name.match(/^local_pickup\[locations\]\[(\d+)\]\[(\w+)\]$/);
+				if (locationMatch) {
+					const index = parseInt(locationMatch[1]);
+					const field = locationMatch[2];
+					if (newSettings.local_pickup.locations[index]) {
+						if (field === 'enabled') {
+							newSettings.local_pickup.locations[index][field] = event.target.checked;
+						} else if (field === 'price') {
+							newSettings.local_pickup.locations[index][field] = parseFloat(event.target.value) || 0;
+						} else {
+							newSettings.local_pickup.locations[index][field] = event.target.value;
+						}
+					}
+				} else {
+					newSettings[event.target.name] = event.target.value;
+				}
 				break;
 		}
 		
@@ -60,11 +108,22 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 	const saveOptionalSettings = () => {
 		setNotice(null);
 
+		// Ensure local_pickup exists in settings before saving
+		const settingsToSave = {
+			...settings,
+			local_pickup: settings.local_pickup || {
+				enabled: false,
+				name: 'Local store pickup',
+				price: 0,
+				free_threshold: null
+			}
+		};
+
 		apiFetch({
 			path: '/fraktvalg/v1/settings/optional-settings',
 			method: 'POST',
 			data: {
-				options: settings,
+				options: settingsToSave,
 			},
 		}).then((response) => {
 			setNotice({
@@ -146,6 +205,158 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 								</p>
 							</div>
 						</div>
+					</div>
+				</AccordionSection>
+
+				<AccordionSection title={__('Local Store Pickup', 'fraktvalg')} open={true}>
+					<p className="text-sm text-gray-600 mb-4">
+						{__('Allow customers to pick up their orders directly from your store locations.', 'fraktvalg')}
+					</p>
+
+					<div className="grid grid-cols-1 gap-4">
+						<InputBoolean
+							label={__('Enable store pickup', 'fraktvalg')}
+							name="local_pickup[enabled]"
+							value={settings.local_pickup?.enabled || false}
+							callback={setOption}
+						/>
+
+						{settings.local_pickup?.enabled && (
+							<>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">
+										{__('Free pickup threshold', 'fraktvalg')}
+									</label>
+									<div className="flex items-center gap-3">
+										<input
+											name="local_pickup[free_threshold]"
+											value={settings.local_pickup?.free_threshold || ''}
+											onChange={setOption}
+											type="number"
+											min="0"
+											step="1"
+											placeholder=""
+											className="w-24 border border-gray-300 rounded-md p-2"
+										/>
+										<span className="text-sm text-gray-600">NOK</span>
+									</div>
+									<p className="text-xs text-gray-500 mt-1">
+										{__('Leave empty to always use location prices', 'fraktvalg')}
+									</p>
+								</div>
+
+								<div>
+									<h4 className="text-sm font-medium text-gray-700 mb-2">
+										{__('Pickup Locations', 'fraktvalg')}
+									</h4>
+									
+									<div className="space-y-3">
+										{(settings.local_pickup?.locations || []).map((location, index) => (
+											<div key={index} className="border border-gray-200 rounded-lg p-4">
+												<div className="grid grid-cols-1 gap-3">
+													<div className="flex items-center justify-between">
+														<h5 className="font-medium text-gray-700">
+															{__('Location', 'fraktvalg')} {index + 1}
+														</h5>
+														<button
+															type="button"
+															onClick={() => {
+																const locations = [...(settings.local_pickup?.locations || [])];
+																locations.splice(index, 1);
+																setOption({
+																	target: {
+																		name: 'local_pickup[locations]',
+																		value: locations
+																	}
+																});
+															}}
+															className="text-red-600 hover:text-red-700 text-sm"
+														>
+															{__('Remove', 'fraktvalg')}
+														</button>
+													</div>
+													
+													<InputBoolean
+														label={__('Enabled', 'fraktvalg')}
+														name={`local_pickup[locations][${index}][enabled]`}
+														value={location.enabled !== false}
+														callback={setOption}
+													/>
+													
+													<InputText
+														label={__('Location name', 'fraktvalg')}
+														name={`local_pickup[locations][${index}][name]`}
+														value={location.name || ''}
+														callback={setOption}
+														placeholder={__('Downtown Store', 'fraktvalg')}
+													/>
+													
+													<InputText
+														label={__('Address', 'fraktvalg')}
+														name={`local_pickup[locations][${index}][address]`}
+														value={location.address || ''}
+														callback={setOption}
+														placeholder={__('123 Main St, Oslo', 'fraktvalg')}
+													/>
+													
+													<div>
+														<label className="block text-sm font-medium text-gray-700 mb-1">
+															{__('Price', 'fraktvalg')}
+														</label>
+														<div className="flex items-center gap-3">
+															<input
+																name={`local_pickup[locations][${index}][price]`}
+																value={location.price || 0}
+																onChange={setOption}
+																type="number"
+																min="0"
+																step="1"
+																placeholder="0"
+																className="w-24 border border-gray-300 rounded-md p-2"
+															/>
+															<span className="text-sm text-gray-600">NOK</span>
+														</div>
+													</div>
+													
+													<InputText
+														label={__('Pickup time text', 'fraktvalg')}
+														name={`local_pickup[locations][${index}][pickup_time_text]`}
+														value={location.pickup_time_text || ''}
+														callback={setOption}
+														placeholder={__('Usually ready within 1 hour', 'fraktvalg')}
+													/>
+												</div>
+											</div>
+										))}
+										
+										<button
+											type="button"
+											onClick={() => {
+												const locations = [...(settings.local_pickup?.locations || [])];
+												const newIndex = locations.length;
+												locations.push({
+													id: `location_${newIndex}`,
+													name: '',
+													address: '',
+													price: 0,
+													pickup_time_text: 'Usually ready within 1 hour',
+													enabled: true
+												});
+												setOption({
+													target: {
+														name: 'local_pickup[locations]',
+														value: locations
+													}
+												});
+											}}
+											className="w-full py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+										>
+											{__('Add Location', 'fraktvalg')}
+										</button>
+									</div>
+								</div>
+							</>
+						)}
 					</div>
 				</AccordionSection>
 

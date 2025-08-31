@@ -37,11 +37,18 @@ class ShipmentStatusColumn {
 			if ( $this->is_hpos_enabled() ) {
 				$order = \wc_get_order( $order_id );
 				$shipment_id = $order ? $order->get_meta( '_fraktvalg_shipment_id' ) : '';
+				$is_local_pickup = $order ? $order->get_meta( '_fraktvalg_local_pickup' ) : false;
+				$shipper = $order ? $order->get_meta( '_fraktvalg_shipper' ) : '';
 			} else {
 				$shipment_id = \get_post_meta( $order_id, '_fraktvalg_shipment_id', true );
+				$is_local_pickup = \get_post_meta( $order_id, '_fraktvalg_local_pickup', true );
+				$shipper = \get_post_meta( $order_id, '_fraktvalg_shipper', true );
 			}
 			
-			if ( ! empty( $shipment_id ) ) {
+			// Check if this is a local pickup order
+			if ( $is_local_pickup || 'local_pickup' === $shipper ) {
+				echo '<mark class="order-status status-processing"><span>' . \__( 'Store Pickup', 'fraktvalg' ) . '</span></mark>';
+			} elseif ( ! empty( $shipment_id ) ) {
 				echo '<mark class="order-status status-completed"><span>' . \__( 'Registered', 'fraktvalg' ) . '</span></mark>';
 			} else {
 				echo '<mark class="order-status status-pending"><span>' . \__( 'Not Registered', 'fraktvalg' ) . '</span></mark>';

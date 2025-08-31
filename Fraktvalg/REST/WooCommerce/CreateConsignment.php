@@ -37,6 +37,31 @@ class CreateConsignment extends Base {
 		$shipping_methods = $order->get_shipping_methods();
 
 		foreach ( $shipping_methods as $shipping_method ) {
+			// Check if this is a local pickup order
+			$shipper = $shipping_method->get_meta( 'shipper' );
+			if ( 'local_pickup' === $shipper || $shipping_method->get_meta( 'local_pickup' ) ) {
+				// Add order note
+				$order->add_order_note(
+					__( 'This order is marked for local store pickup. The item should be picked up at the store and should not be shipped.', 'fraktvalg' ),
+					false // Not a customer note.
+				);
+
+				// Save meta data to indicate local pickup
+				$order->update_meta_data( '_fraktvalg_shipper', 'local_pickup' );
+				$order->update_meta_data( '_fraktvalg_local_pickup', true );
+				$order->save();
+
+				// Return success response without creating consignment
+				return new \WP_REST_Response([
+					'success' => true,
+					'local_pickup' => true,
+					'message' => __( 'Order is marked for store pickup. No shipping label is required.', 'fraktvalg' ),
+					'data' => [
+						'shipper' => 'local_pickup',
+						'shippingMethod' => $shipping_method->get_name(),
+					]
+				], 200);
+			}
 			$total_weight = 0;
 			$total_length = 0;
 			$total_width = 0;

@@ -25,10 +25,15 @@ export default function Shipping() {
             
             setDataAttributes(attributes);
 
-            // Set initial view based on shipment ID
+            // Set initial view based on shipment ID or local pickup
             const shipmentId = attributes['fraktvalg_shipment_id'];
+            const isLocalPickup = attributes['fraktvalg_shipper'] === 'local_pickup' || attributes['fraktvalg_local_pickup'] === '1';
+            
             if (shipmentId && shipmentId.trim() !== '') {
                 setActiveView('label');
+            } else if (isLocalPickup) {
+                // Keep booking view for local pickup to show the message
+                setActiveView('booking');
             }
         }
     }, []);

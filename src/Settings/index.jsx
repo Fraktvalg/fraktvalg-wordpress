@@ -35,6 +35,12 @@ export default function Settings({}) {
 		},
 		useProduction: true,
 		names: [],
+		local_pickup: {
+			enabled: false,
+			name: __( 'Local store pickup', 'fraktvalg' ),
+			price: 0,
+			free_threshold: null,
+		},
 	});
 
 	// Loading states
@@ -127,7 +133,17 @@ export default function Settings({}) {
 			path: '/fraktvalg/v1/settings/optional-settings',
 			method: 'GET',
 		}).then((response) => {
-			setOptionalSettings(response?.data || optionalSettings);
+			// Merge the fetched settings with defaults to ensure all properties exist
+			const fetchedSettings = response?.data || {};
+			setOptionalSettings({
+				...optionalSettings,
+				...fetchedSettings,
+				// Ensure local_pickup is properly merged
+				local_pickup: {
+					...optionalSettings.local_pickup,
+					...(fetchedSettings.local_pickup || {})
+				}
+			});
 		}).catch((error) => {
 			setOptionalSettingsError(error?.message);
 		}).finally(() => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
-import Shipping from './Shipping';
+import Shipping from './Shipping/index.jsx';
+import './Shipping/shipping.pcss';
 
 const domNode = document.getElementById('fraktvalg-label-meta-box');
 

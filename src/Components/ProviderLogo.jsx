@@ -1,9 +1,13 @@
-import {TruckIcon} from "@heroicons/react/24/outline";
+import {TruckIcon, BuildingStorefrontIcon} from "@heroicons/react/24/outline";
 
-export default function ProviderLogo({logo = null, ...props}) {
+export default function ProviderLogo({logo = null, shipper = null, ...props}) {
 	const { alt = '' } = props;
 
 	if ( ! logo ) {
+		// Use store icon for local pickup
+		if (shipper === 'local_pickup') {
+			return <BuildingStorefrontIcon { ...props } />;
+		}
 		return <TruckIcon { ...props } />;
 	}
 

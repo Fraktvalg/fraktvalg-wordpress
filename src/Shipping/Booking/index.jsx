@@ -22,7 +22,20 @@ export default function Booking({ setActiveView, dataAttributes, setDataAttribut
         .then(response => {
             // Reset error count on success
             setErrorCount(0);
-            // Update data attributes with new shipment ID
+            
+            // Check if this is a local pickup order
+            if (response.local_pickup) {
+                // Update data attributes to indicate local pickup
+                setDataAttributes({
+                    ...dataAttributes,
+                    'fraktvalg_shipper': 'local_pickup',
+                    'fraktvalg_local_pickup': true
+                });
+                // Don't switch to label view for local pickup
+                return;
+            }
+            
+            // Update data attributes with new shipment ID for regular shipments
             setDataAttributes({
                 ...dataAttributes,
                 'fraktvalg_shipment_id': response.shipment_id
@@ -38,6 +51,54 @@ export default function Booking({ setActiveView, dataAttributes, setDataAttribut
                     : __('Failed to create consignment. Please try again.', 'fraktvalg')
             );
         });
+    }
+
+    // Check if this is a local pickup order
+    const isLocalPickup = dataAttributes['fraktvalg_shipper'] === 'local_pickup' || 
+                          dataAttributes['fraktvalg_local_pickup'] === 'true' || 
+                          dataAttributes['fraktvalg_local_pickup'] === '1' ||
+                          dataAttributes['fraktvalg_local_pickup'] === true ||
+                          dataAttributes['fraktvalg_local_pickup'] === 1;
+
+    if (isLocalPickup) {
+        // Get location details from data attributes
+        const locationName = dataAttributes['fraktvalg_pickup_location_name'] || '';
+        const locationAddress = dataAttributes['fraktvalg_pickup_location_address'] || '';
+        
+        return (
+            <div className="p-4">
+                <h3 className="text-base font-semibold mb-3">
+                    {__('Local Store Pickup', 'fraktvalg')}
+                </h3>
+                <p className="text-sm text-gray-700 mb-2">
+                    {__('This is a local pickup order. Do not ship this order.', 'fraktvalg')}
+                </p>
+                
+                {(locationName || locationAddress) && (
+                    <div className="mt-3 p-3 bg-gray-50 rounded">
+                        <p className="text-sm font-medium text-gray-700 mb-1">
+                            {__('Pickup Location:', 'fraktvalg')}
+                        </p>
+                        {locationName && (
+                            <p className="text-sm text-gray-600">
+                                {locationName}
+                            </p>
+                        )}
+                        {locationAddress && (
+                            <p className="text-sm text-gray-600">
+                                {locationAddress}
+                            </p>
+                        )}
+                    </div>
+                )}
+                
+                {!locationName && !locationAddress && (
+                    <p className="text-sm text-gray-600">
+                        {__('The customer will pick up the order at your store location.', 'fraktvalg')}
+                    </p>
+                )}
+            </div>
+        );
     }
 
     return (

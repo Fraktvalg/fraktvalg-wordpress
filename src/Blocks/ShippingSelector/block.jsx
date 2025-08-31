@@ -80,12 +80,14 @@ export default function Block({attributes = {}}) {
 						name: rate.name,
 						description: rate.description,
 						price: rate.price,
-						shippingTime: __( '1-3 business days', 'fraktvalg' ),
-						icon: getShippingIcon(rate?.icon),
+						shippingTime: rate.delivery.customText || __( '1-3 business days', 'fraktvalg' ),
+						icon: getShippingIcon(rate?.icon, rate?.isLocalPickup),
 						selected: rate.selected,
 						delivery: {
 							days: rate.delivery.days,
-						}
+							customText: rate.delivery.customText,
+						},
+						isLocalPickup: rate?.isLocalPickup
 					}));
 
 					const selectedOption = shipper?.shippingOptions.find(option => option.selected) || null;
@@ -96,8 +98,19 @@ export default function Block({attributes = {}}) {
 					}
 
 					shipper.details.LowestPrice = Math.min(...shipper.shippingOptions.map(option => option.price));
-					const minDays = Math.min(...shipper.shippingOptions.map(option => option.delivery.days));
-					shipper.details.quickestShippingTime = !isNaN(minDays) ? minDays + __(' business days', 'fraktvalg') : _x( '3-5 business days', 'Default fallback shipping time', 'fraktvalg' );
+					
+					// Check if this shipper has custom text (like local pickup)
+					const hasCustomText = shipper.shippingOptions.some(option => option.delivery.customText);
+					if (hasCustomText) {
+						// Use the custom text from the first option that has it
+						const customTextOption = shipper.shippingOptions.find(option => option.delivery.customText);
+						shipper.details.quickestShippingTime = customTextOption.delivery.customText;
+					} else {
+						// Calculate days for regular shipping
+						const daysArray = shipper.shippingOptions.map(option => option.delivery.days).filter(days => days !== null);
+						const minDays = daysArray.length > 0 ? Math.min(...daysArray) : null;
+						shipper.details.quickestShippingTime = minDays !== null && !isNaN(minDays) ? minDays + __(' business days', 'fraktvalg') : _x( '3-5 business days', 'Default fallback shipping time', 'fraktvalg' );
+					}
 				});
 
 				setShippers(newShippers);
