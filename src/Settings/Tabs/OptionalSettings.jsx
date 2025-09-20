@@ -194,6 +194,7 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 							<div>
 								<label className="block text-sm font-medium text-gray-700 mb-1">
 									{__('Length', 'fraktvalg')}
+									<small> (cm)</small>
 								</label>
 								<InputText
 									type="number"
@@ -207,6 +208,7 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 							<div>
 								<label className="block text-sm font-medium text-gray-700 mb-1">
 									{__('Width', 'fraktvalg')}
+									<small> (cm)</small>
 								</label>
 								<InputText
 									type="number"
@@ -220,6 +222,7 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 							<div>
 								<label className="block text-sm font-medium text-gray-700 mb-1">
 									{__('Height', 'fraktvalg')}
+									<small> (cm)</small>
 								</label>
 								<InputText
 									type="number"
@@ -233,6 +236,7 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 							<div>
 								<label className="block text-sm font-medium text-gray-700 mb-1">
 									{__('Weight', 'fraktvalg')}
+									<small> (kg)</small>
 								</label>
 								<InputText
 									type="number"
