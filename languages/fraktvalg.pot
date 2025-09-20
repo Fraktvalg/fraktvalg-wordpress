@@ -2,21 +2,22 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Fraktvalg 1.3.0-beta1\n"
+"Project-Id-Version: Fraktvalg 1.3.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fraktvalg\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-24T11:32:28+00:00\n"
+"POT-Creation-Date: 2025-09-20T12:39:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fraktvalg\n"
 
 #. Plugin Name of the plugin
 #: fraktvalg.php
-#: Fraktvalg/WooCommerce/Admin/ShippingLabel.php:45
+#: Fraktvalg/Settings.php:35
+#: Fraktvalg/WooCommerce/Admin/ShippingLabel.php:61
 #: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:27
 #: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:28
 msgid "Fraktvalg"
@@ -101,26 +102,28 @@ msgstr ""
 msgid "An unknown error occurred, and your preferences could not be saved at this time. Please double check the options, and try again. You can always move forward, and change these later if you wish."
 msgstr ""
 
-#: Fraktvalg/REST/Settings/Onboarding.php:162
-#: Fraktvalg/REST/Settings/OptionalSettings.php:61
+#: Fraktvalg/REST/Settings/Onboarding.php:164
+#: Fraktvalg/REST/Settings/OptionalSettings.php:63
 msgid "Settings saved"
 msgstr ""
 
-#: Fraktvalg/REST/Settings/Onboarding.php:163
+#: Fraktvalg/REST/Settings/Onboarding.php:165
 msgid "Your default dimensions have been successfully stored."
 msgstr ""
 
-#: Fraktvalg/REST/Settings/OptionalSettings.php:62
+#: Fraktvalg/REST/Settings/OptionalSettings.php:64
 msgid "Your optional preferences have been successfully stored."
 msgstr ""
 
 #. translators: 1: Shipping method name, 2: Shipper name, 3: Error message.
 #: Fraktvalg/REST/WooCommerce/CreateConsignment.php:186
+#, php-format
 msgid "Fraktvalg: Failed to create shipment with %1$s for %2$s (%3$s)"
 msgstr ""
 
 #. translators: 1: Shipping method name, 2: Shipper name, 3: Shipment ID.
 #: Fraktvalg/REST/WooCommerce/CreateConsignment.php:212
+#, php-format
 msgid "Fraktvalg: Shipment created with %1$s for %2$s and has been assigned shipment ID %3$s"
 msgstr ""
 
@@ -128,12 +131,20 @@ msgstr ""
 msgid "No valid Fraktvalg shipping methods found for this order."
 msgstr ""
 
-#: Fraktvalg/Settings.php:45
+#: Fraktvalg/Settings.php:36
+msgid "Fraktvalg is connected to your the test environment, no shipping orders will be fulfilled"
+msgstr ""
+
+#: Fraktvalg/Settings.php:39
+msgid "Fraktvalg is connected to your live environment, and shipments can be registered"
+msgstr ""
+
+#: Fraktvalg/Settings.php:79
 msgctxt "Settings page title"
 msgid "Fraktvalg settings"
 msgstr ""
 
-#: Fraktvalg/Settings.php:46
+#: Fraktvalg/Settings.php:80
 msgctxt "Settings page menu title"
 msgid "Fraktvalg settings"
 msgstr ""
@@ -175,8 +186,9 @@ msgid "Not Registered"
 msgstr ""
 
 #. translators: 1: Shipper name, 2: Shipping option name.
-#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:291
-#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:344
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:294
+#: Fraktvalg/WooCommerce/ShippingMethod/Fraktvalg.php:347
+#, php-format
 msgid "%1$s with %2$s"
 msgstr ""
 
@@ -197,12 +209,19 @@ msgstr ""
 
 #: build/Blocks/ShippingSelector/frontend.js:1
 #: build/Blocks/ShippingSelector/index.js:1
+#, js-format
 msgid "Shipped by %s"
 msgstr ""
 
 #: build/Blocks/ShippingSelector/frontend.js:1
 #: build/Blocks/ShippingSelector/index.js:1
+#, js-format
 msgid "From %s"
+msgstr ""
+
+#: build/Blocks/ShippingSelector/frontend.js:1
+#: build/Blocks/ShippingSelector/index.js:1
+msgid "other providers"
 msgstr ""
 
 #: build/Blocks/ShippingSelector/frontend.js:1
@@ -382,6 +401,11 @@ msgstr ""
 
 #: build/fraktvalg.js:1
 msgid "Save preferred provider preferences"
+msgstr ""
+
+#: build/fraktvalg.js:1
+msgctxt "Tab label"
+msgid "Optional settings"
 msgstr ""
 
 #: build/fraktvalg.js:1
@@ -571,11 +595,6 @@ msgstr ""
 #: build/fraktvalg.js:1
 msgctxt "Tab label"
 msgid "My providers"
-msgstr ""
-
-#: build/fraktvalg.js:1
-msgctxt "Tab label"
-msgid "Optional settings"
 msgstr ""
 
 #: build/fraktvalg.js:1
