@@ -18,7 +18,7 @@ class ShippingLabel {
 		if ( ! isset( $_GET['page'] ) || 'wc-orders' !== $_GET['page'] || ! isset( $_GET['action'] ) || $_GET['action'] !== 'edit' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- False positive report presuming the enqueue hook is handling form data.
 			return;
 		}
-		
+
 		\add_action( 'add_meta_boxes', [ $this, 'add_shipping_label_meta_box' ] );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -35,7 +35,7 @@ class ShippingLabel {
 		\wp_set_script_translations(
 			'fraktvalg-shipping',
 			'fraktvalg',
-			dirname( plugin_basename( FRAKTVALG_BASE_FILE ) ) . '/languages/'
+			\trailingslashit( FRAKTVALG_BASE_PATH ) . 'languages'
 		);
 	}
 
