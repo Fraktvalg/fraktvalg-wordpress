@@ -72,6 +72,11 @@ export default function OptionalSettings({settings, isLoading, error, onUpdateSe
 				title: response?.title,
 				message: response?.message,
 			})
+
+			const envIndicator = document.getElementById('fraktvalg-env-indicator-block');
+			if (envIndicator) {
+				envIndicator.style.background = ( settings.useProduction ? '#4D8965' : '#DC2626' ); // Example: light green
+			}
 		}).catch((error) => {
 			setNotice({
 				type: 'error',

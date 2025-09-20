@@ -21,6 +21,40 @@ class Settings {
 		\add_action( 'admin_menu', [ $this, 'add_menu_item' ] );
 
 		\add_action( 'admin_print_styles', [ $this, 'inject_admin_css' ] );
+
+		\add_action( 'admin_bar_menu', [ $this, 'admin_bar_status' ] );
+	}
+
+	public function admin_bar_status( $wp_admin_bar ) {
+		if ( ! is_user_logged_in() || ! is_admin_bar_showing() ) {
+			return;
+		}
+
+		$environment = ( Options::get( 'useProduction' ) ? 'production' : 'development' );
+		$env_color = '#DC2626';
+		$env_label = __( 'Fraktvalg', 'fraktvalg' );
+		$env_hint = __( 'Fraktvalg is connected to your the test environment, no shipping orders will be fulfilled', 'fraktvalg' );
+		if ( 'production' === $environment ) {
+			$env_color = '#4D8965';
+			$env_hint = __( 'Fraktvalg is connected to your live environment, and shipments can be registered', 'fraktvalg' );
+		}
+
+		// The visible content: icon + label text.
+		$title = sprintf(
+			'<span id="fraktvalg-env-indicator-block" style="display: inline-grid; grid-auto-flow: column; align-items: center; background: %s; padding: 0 8px; color: #fff;">%s</span>',
+			\esc_attr( $env_color ),
+			\esc_html( $env_label )
+		);
+
+		$wp_admin_bar->add_node( [
+			'id'     => 'fraktvalg-env-indicator',
+			'parent' => 'top-secondary',
+			'title'  => $title,
+			'href'   => \admin_url( 'admin.php?page=fraktvalg' ),
+			'meta'   => [
+				'title' => $env_hint,
+			],
+		] );
 	}
 
 	public function inject_admin_css() {
