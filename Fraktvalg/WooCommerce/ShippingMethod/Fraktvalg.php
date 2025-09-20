@@ -179,7 +179,10 @@ class Fraktvalg extends \WC_Shipping_Method {
 				$shipping_options_array
 			);
 
-			\set_transient( $cache_key, $shippers, DAY_IN_SECONDS );
+			// Only cache successful API requests.
+			if ( ! \is_wp_error( $shippers ) ) {
+				\set_transient( $cache_key, $shippers, DAY_IN_SECONDS );
+			}
 		}
 
 		$settings        = Options::get();
