@@ -19,6 +19,22 @@ class ShippingLabel {
 			return;
 		}
 
+		$has_fraktvalg_shipment = false;
+
+		$order = \wc_get_order( \absint( $_GET['id'] ) );
+		foreach ( $order->get_items( 'shipping' ) as $item_id => $shipping_item ) {
+			// Get the "shipper" meta tied to this shipping line item
+			$shipper = $shipping_item->get_meta( 'fraktvalg' );
+
+			if ( $shipper ) {
+				$has_fraktvalg_shipment = true;
+			}
+		}
+
+		if ( ! $has_fraktvalg_shipment ) {
+			return;
+		}
+
 		\add_action( 'add_meta_boxes', [ $this, 'add_shipping_label_meta_box' ] );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
