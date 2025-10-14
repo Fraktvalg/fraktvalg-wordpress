@@ -68,19 +68,19 @@ export default function StoreSettings({ nextStep }) {
 		try {
 			// Get the current address fields
 			const addressFields = storeStatus.address?.fields || {};
-			
+
 			// Make API call to update all address fields at once
 			await apiFetch( {
 				path: '/fraktvalg/v1/onboarding/store-address',
 				method: 'POST',
-				data: { 
+				data: {
 					address: addressFields.address || '',
 					postcode: addressFields.postcode || '',
 					city: addressFields.city || '',
 					country: addressFields.country || 'NO'
 				}
 			} );
-			
+
 			// Update local state to mark address as complete
 			setStoreStatus( prev => ({
 				...prev,
@@ -89,13 +89,13 @@ export default function StoreSettings({ nextStep }) {
 					complete: true
 				}
 			}));
-			
+
 			// Show success message for this section
 			setSectionSaveStatus(prev => ({
 				...prev,
 				address: true
 			}));
-			
+
 			// Reset the success message after 3 seconds
 			setTimeout(() => {
 				setSectionSaveStatus(prev => ({
@@ -103,7 +103,7 @@ export default function StoreSettings({ nextStep }) {
 					address: false
 				}));
 			}, 3000);
-			
+
 		} catch ( error ) {
 			console.error( 'Error updating store address:', error );
 		} finally {
@@ -129,14 +129,14 @@ export default function StoreSettings({ nextStep }) {
 			await apiFetch( {
 				path: '/fraktvalg/v1/onboarding/store-default-dimensions',
 				method: 'POST',
-				data: { 
+				data: {
 					length: storeStatus.default_dimensions?.length || '',
 					width: storeStatus.default_dimensions?.width || '',
 					height: storeStatus.default_dimensions?.height || '',
 					weight: storeStatus.default_dimensions?.weight || ''
 				}
 			} );
-			
+
 			// Update local state to mark dimensions as complete
 			setStoreStatus( prev => ({
 				...prev,
@@ -145,13 +145,13 @@ export default function StoreSettings({ nextStep }) {
 					complete: true
 				}
 			}));
-			
+
 			// Show success message for this section
 			setSectionSaveStatus(prev => ({
 				...prev,
 				dimensions: true
 			}));
-			
+
 			// Reset the success message after 3 seconds
 			setTimeout(() => {
 				setSectionSaveStatus(prev => ({
@@ -159,7 +159,7 @@ export default function StoreSettings({ nextStep }) {
 					dimensions: false
 				}));
 			}, 3000);
-			
+
 		} catch ( error ) {
 			console.error( 'Error updating store default dimensions:', error );
 		} finally {
@@ -200,7 +200,7 @@ export default function StoreSettings({ nextStep }) {
 						placeholder={ __( 'Enter your store address', 'fraktvalg' ) }
 					/>
 				</div>
-				
+
 				<div>
 					<label className="block text-sm font-medium text-gray-700 mb-1">
 						{ __( 'Postal Code', 'fraktvalg' ) }
@@ -211,7 +211,7 @@ export default function StoreSettings({ nextStep }) {
 						placeholder={ __( 'Enter your postal code', 'fraktvalg' ) }
 					/>
 				</div>
-				
+
 				<div>
 					<label className="block text-sm font-medium text-gray-700 mb-1">
 						{ __( 'City', 'fraktvalg' ) }
@@ -222,7 +222,7 @@ export default function StoreSettings({ nextStep }) {
 						placeholder={ __( 'Enter your city', 'fraktvalg' ) }
 					/>
 				</div>
-				
+
 				<div>
 					<label className="block text-sm font-medium text-gray-700 mb-1">
 						{ __( 'Country', 'fraktvalg' ) }
@@ -235,10 +235,10 @@ export default function StoreSettings({ nextStep }) {
 					/>
 				</div>
 			</div>
-			
+
 			<div className="mt-4 flex justify-end">
-				<Button 
-					type="button" 
+				<Button
+					type="button"
 					onClick={saveAddressSettings}
 					disabled={isSaving}
 				>
@@ -254,7 +254,7 @@ export default function StoreSettings({ nextStep }) {
 					) }
 				</Button>
 			</div>
-			
+
 			{sectionSaveStatus.address && (
 				<div className="mt-2 text-green-600 text-sm flex items-center">
 					<CheckCircleIcon className="h-4 w-4 mr-1" />
@@ -292,6 +292,7 @@ export default function StoreSettings({ nextStep }) {
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								{ __( 'Length', 'fraktvalg' ) }
+								<small> (cm)</small>
 							</label>
 							<InputText
 								type="number"
@@ -300,10 +301,11 @@ export default function StoreSettings({ nextStep }) {
 								placeholder={ __( 'Length', 'fraktvalg' ) }
 							/>
 						</div>
-						
+
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								{ __( 'Width', 'fraktvalg' ) }
+								<small> (cm)</small>
 							</label>
 							<InputText
 								type="number"
@@ -312,10 +314,11 @@ export default function StoreSettings({ nextStep }) {
 								placeholder={ __( 'Width', 'fraktvalg' ) }
 							/>
 						</div>
-						
+
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								{ __( 'Height', 'fraktvalg' ) }
+								<small> (cm)</small>
 							</label>
 							<InputText
 								type="number"
@@ -324,10 +327,11 @@ export default function StoreSettings({ nextStep }) {
 								placeholder={ __( 'Height', 'fraktvalg' ) }
 							/>
 						</div>
-						
+
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								{ __( 'Weight', 'fraktvalg' ) }
+								<small> (kg)</small>
 							</label>
 							<InputText
 								type="number"
@@ -339,8 +343,8 @@ export default function StoreSettings({ nextStep }) {
 					</div>
 
 					<div className="mt-4 flex justify-end">
-						<Button 
-							type="button" 
+						<Button
+							type="button"
 							onClick={saveDefaultDimensions}
 							disabled={isSaving}
 						>
@@ -356,14 +360,14 @@ export default function StoreSettings({ nextStep }) {
 							) }
 						</Button>
 					</div>
-					
+
 					{sectionSaveStatus.dimensions && (
 						<div className="mt-2 text-green-600 text-sm flex items-center">
 							<CheckCircleIcon className="h-4 w-4 mr-1" />
 							{ __( 'Default dimensions saved successfully', 'fraktvalg' ) }
 						</div>
 					)}
-					
+
 				</div>
 			) : (
 				<p className="text-green-600">
@@ -408,7 +412,7 @@ export default function StoreSettings({ nextStep }) {
 					content={addressContent}
 					visible={storeStatus.address && !storeStatus.address.complete}
 				/>
-				
+
 				{/* Package Dimensions Section */}
 				<ExpandableSection
 					title={ __( 'Package Dimensions', 'fraktvalg' ) }
@@ -423,4 +427,4 @@ export default function StoreSettings({ nextStep }) {
 			</Button>
 		</div>
 	);
-} 
+}
