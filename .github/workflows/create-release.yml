@@ -16,19 +16,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0 # Needed to create tags
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: '20'
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
         with:
           php-version: '8.2'
+
+      - name: Validate version numbers
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          VERSION_NUM="${VERSION#v}"
+          PHP_VERSION=$(grep "^ \* Version:" fraktvalg.php | sed 's/^ \* Version: //' | tr -d '[:space:]')
+          README_VERSION=$(grep "^Stable tag:" readme.txt | sed 's/^Stable tag: //' | tr -d '[:space:]')
+          if [ "$PHP_VERSION" != "$VERSION_NUM" ]; then
+            echo "ERROR: fraktvalg.php Version ($PHP_VERSION) != input ($VERSION_NUM)"
+            exit 1
+          fi
+          if [ "$README_VERSION" != "$VERSION_NUM" ]; then
+            echo "ERROR: readme.txt Stable tag ($README_VERSION) != input ($VERSION_NUM)"
+            exit 1
+          fi
+          echo "Version check passed: $VERSION_NUM"
 
       - name: Create tag
         env:
@@ -54,10 +70,21 @@ jobs:
       - name: Package plugin
         run: npm run plugin-zip
 
-      - name: Create draft release
-        uses: softprops/action-gh-release@v1
+      - name: Create release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           tag_name: ${{ github.event.inputs.version }}
           name: Release ${{ github.event.inputs.version }}
-          draft: true
+          draft: false
           files: fraktvalg.zip
+
+      - name: Extract plugin zip to deploy directory
+        run: unzip fraktvalg.zip -d deploy/
+
+      - name: Deploy to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # v2.3.0
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: fraktvalg
+          BUILD_DIR: deploy/fraktvalg
