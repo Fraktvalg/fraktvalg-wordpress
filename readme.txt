@@ -4,7 +4,7 @@ Contributors: fraktvalg
 Requires at least: 5.8
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,15 @@ By choosing Fraktvalg, you streamline your shipping processes, enhance customer 
 Fantastic! The Fraktvalg plugin is open source, and you can browse the code or give feedback and suggestions via the [GitHub repository](https://github.com/Fraktvalg/fraktvalg-wordpress)
 
 == Changelog ==
+
+= 1.3.3 (2026-03-02) =
+* Bugfix: Only cache API responses when they're guaranteed successes.
+* Enhancement: Show an environment indicator for shipping integrations at all times.
+* Enhancement: Add size dimension hints to the default dimensions settings.
+* Enhancement: Add fallback dimensions within the onboarding wizard.
+* Enhancement: Only show shipping controls for Fraktvalg if the order was placed through the Fraktvalg system.
+* Feature: Add support for third-party, or manually created, shipping methods in the shipping selector.
+* Translations: Add new translatable strings and corresponding Norwegian translations.
 
 = 1.3.2 (2025-09-03) =
 * Enhancement: Improve the print experience by adding a local proxy for PDFs to prevent incorrect CORS warnings, and close image label print screens fully when completed.
