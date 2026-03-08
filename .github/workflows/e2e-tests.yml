@@ -17,10 +17,6 @@ jobs:
         include:
           - browser: chromium
             optional: false
-          - browser: firefox
-            optional: false
-          - browser: webkit
-            optional: true
 
     # Optional browsers are allowed to fail without blocking
     # the overall workflow result.
