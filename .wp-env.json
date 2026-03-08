@@ -16,6 +16,10 @@
 	},
 	"env": {
 		"tests": {
+			"plugins": [
+				".",
+				"https://downloads.wordpress.org/plugin/woocommerce.zip"
+			],
 			"mappings": {
 				"wp-content/mu-plugins/fraktvalg-api-faker.php": "./tests/dependencies/mu-plugins/fraktvalg-api-faker.php"
 			}
