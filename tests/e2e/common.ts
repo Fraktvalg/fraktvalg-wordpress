@@ -12,7 +12,7 @@ export const signIn = async ( { page } ) => {
 		await page.click( '#wp-submit' );
 
 		// Wait for the page to load after submitting the form.
-		await page.waitForURL( '/wp-admin/' );
+		await page.waitForURL( '**/wp-admin/**' );
 	}
 
 	expect(

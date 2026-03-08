@@ -21,7 +21,16 @@
 	<!-- Do not perform checks inside external package directories. -->
 	<exclude-pattern>vendor/</exclude-pattern>
 	<exclude-pattern>node_modules/</exclude-pattern>
-	<exclude-pattern>tests/</exclude-pattern>
+
+	<!-- Exclude test bootstrap stubs; they contain bare define() calls that are
+	     intentionally terse and are not shipped as part of the plugin. -->
+	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
+	<exclude-pattern>tests/phpstan/</exclude-pattern>
+
+	<!-- Exclude Playwright / TypeScript e2e specs (picked up only because the
+	     directory scan is recursive; the php extension filter handles .ts files,
+	     but any .php fixtures inside e2e/ are not plugin code). -->
+	<exclude-pattern>tests/e2e/</exclude-pattern>
 
 	<!-- Do not perform checks on the `build` directory. -->
 	<exclude-pattern>build/</exclude-pattern>

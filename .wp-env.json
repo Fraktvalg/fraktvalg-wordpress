@@ -13,5 +13,12 @@
 		"WP_DEBUG_DISPLAY": true,
 		"WP_DEBUG_LOG": "/tmp/wp-debug.log",
 		"FS_METHOD": "direct"
+	},
+	"env": {
+		"tests": {
+			"mappings": {
+				"wp-content/mu-plugins/fraktvalg-api-faker.php": "./tests/dependencies/mu-plugins/fraktvalg-api-faker.php"
+			}
+		}
 	}
 }

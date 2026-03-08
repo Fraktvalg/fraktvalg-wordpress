@@ -12,7 +12,12 @@ permissions:
   contents: write
 
 jobs:
+  e2e-tests:
+    name: E2E Tests
+    uses: ./.github/workflows/e2e-tests.yml
+
   release:
+    needs: e2e-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
